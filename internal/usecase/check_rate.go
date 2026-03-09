@@ -20,13 +20,13 @@ type CheckRateResult struct {
 
 // RateChecker is the usecase for checking the rate
 type RateChecker struct {
-	Repo     rate.Repository
+	Fetcher  rate.RateFetcher
 	Notifier rate.Notifier
 }
 
-func NewRateChecker(repo rate.Repository, notifier rate.Notifier) *RateChecker {
+func NewRateChecker(repo rate.RateFetcher, notifier rate.Notifier) *RateChecker {
 	return &RateChecker{
-		Repo:     repo,
+		Fetcher:  repo,
 		Notifier: notifier,
 	}
 }
@@ -36,11 +36,11 @@ func (r *RateChecker) CheckRates(base, target string, forceNotify bool) (*CheckR
 	yesterday := today.AddDate(0, 0, -1)
 
 	// Get rates from repository
-	todayRate, err := r.Repo.FetchRate(today, base, target)
+	todayRate, err := r.Fetcher.FetchRate(today, base, target)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch today's rate: %w", err)
 	}
-	yesterdayRate, err := r.Repo.FetchRate(yesterday, base, target)
+	yesterdayRate, err := r.Fetcher.FetchRate(yesterday, base, target)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch yesterday's rate: %w", err)
 	}
