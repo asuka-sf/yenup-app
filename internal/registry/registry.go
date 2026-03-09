@@ -17,7 +17,7 @@ type Registry struct {
 
 func NewRegistry(cfg *config.Config) (*Registry, error) {
 	// Select rate fetcher based on API_PROVIDER config
-	var rateFetcher domainRate.Repository
+	var rateFetcher domainRate.RateFetcher
 	if cfg.APIProvider == "frankfurter" {
 		rateFetcher = rateRepo.NewFrankfurterFetcher(cfg.FrankfurterAPIURL)
 	} else {

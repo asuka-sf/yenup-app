@@ -2,7 +2,7 @@ package rate
 
 import "time"
 
-type Repository interface {
+type RateFetcher interface {
 	// Get the rate for a given base and target currency
 	FetchRate(date time.Time, base string, target string) (Rate, error)
 }
