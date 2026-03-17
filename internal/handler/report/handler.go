@@ -1,7 +1,9 @@
 package report
 
 import (
+	"log"
 	"net/http"
+
 	"yenup/internal/usecase"
 
 	"github.com/gin-gonic/gin"
@@ -21,7 +23,8 @@ func (h *ReportHandler) GenerateReport(c *gin.Context) {
 	ctx := c.Request.Context()
 
 	if err := h.Usecase.GenerateReport(ctx); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		log.Printf("GenerateReport failed: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate weekly report"})
 		return
 	}
 

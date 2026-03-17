@@ -3,6 +3,8 @@ package rate
 import (
 	"encoding/json"
 	"fmt"
+	neturl "net/url"
+
 	domain "yenup/internal/domain/rate"
 )
 
@@ -35,9 +37,9 @@ func (f *ExchangeRatesFetcher) FetchRate(date, base, target string) (domain.Rate
 	url := fmt.Sprintf(
 		"%s%s?base=EUR&symbols=%s,%s&access_key=%s",
 		f.URL,
-		date,
-		base,
-		target,
+		neturl.PathEscape(date),
+		neturl.QueryEscape(base),
+		neturl.QueryEscape(target),
 		f.APIKey,
 	)
 
