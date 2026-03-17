@@ -6,4 +6,5 @@ import (
 
 func (h *Handler) RegisterRoutes(r *gin.Engine) {
 	r.GET("/check-rate", h.RateHandler.CheckRate)
+	r.GET("/weekly-report", h.ReportHandler.GenerateReport)
 }

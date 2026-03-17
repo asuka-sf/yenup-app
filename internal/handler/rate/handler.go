@@ -3,6 +3,7 @@ package rate
 import (
 	"net/http"
 	"strconv"
+
 	"yenup/internal/usecase"
 
 	"github.com/gin-gonic/gin"

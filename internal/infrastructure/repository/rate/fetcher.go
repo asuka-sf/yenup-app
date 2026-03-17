@@ -3,7 +3,8 @@ package rate
 import (
 	"encoding/json"
 	"fmt"
-	"time"
+	neturl "net/url"
+
 	domain "yenup/internal/domain/rate"
 )
 
@@ -32,15 +33,13 @@ func NewExchangeRatesFetcher(apiKey, url string) *ExchangeRatesFetcher {
 // FetchRate fetches the exchange rate for base/target by using EUR as intermediate
 // Since free plan only supports EUR as base, we calculate:
 // base/target = EUR/target ÷ EUR/base
-func (f *ExchangeRatesFetcher) FetchRate(date time.Time, base string, target string) (domain.Rate, error) {
-	dateStr := date.Format("2006-01-02")
-
+func (f *ExchangeRatesFetcher) FetchRate(date, base, target string) (domain.Rate, error) {
 	url := fmt.Sprintf(
 		"%s%s?base=EUR&symbols=%s,%s&access_key=%s",
 		f.URL,
-		dateStr,
-		base,
-		target,
+		neturl.PathEscape(date),
+		neturl.QueryEscape(base),
+		neturl.QueryEscape(target),
 		f.APIKey,
 	)
 
