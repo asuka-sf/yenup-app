@@ -1,11 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
+
 	"yenup/internal/config"
 	"yenup/internal/registry"
 
+	"cloud.google.com/go/storage"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,8 +20,16 @@ func main() {
 		log.Fatal(err)
 	}
 
+	//  GCSClient
+	ctx := context.Background()
+	gcsClient, err := storage.NewClient(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer gcsClient.Close()
+
 	// create registry from registry.go
-	reg, err := registry.NewRegistry(cfg)
+	reg, err := registry.NewRegistry(cfg, gcsClient)
 	if err != nil {
 		log.Fatal(err)
 	}
