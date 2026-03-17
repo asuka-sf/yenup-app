@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
-	"time"
 	domain "yenup/internal/domain/rate"
 )
 
@@ -30,9 +29,8 @@ func NewFrankfurterFetcher(url string) *FrankfurterFetcher {
 
 // FetchRate fetches the exchange rate for the given date, base, and target currencies
 // If the specific date is not available, it falls back to the latest available date
-func (f *FrankfurterFetcher) FetchRate(date time.Time, base string, target string) (domain.Rate, error) {
-	dateStr := date.Format("2006-01-02")
-	url := fmt.Sprintf("%s%s?from=%s&to=%s", f.URL, dateStr, base, target)
+func (f *FrankfurterFetcher) FetchRate(date, base, target string) (domain.Rate, error) {
+	url := fmt.Sprintf("%s%s?from=%s&to=%s", f.URL, date, base, target)
 
 	rate, err := f.fetchFromURL(url, base, target)
 	if err != nil {
@@ -64,12 +62,10 @@ func (f *FrankfurterFetcher) fetchFromURL(url string, base string, target string
 		return domain.Rate{}, fmt.Errorf("rate for %s not found in response", target)
 	}
 
-	actualDate, _ := time.Parse("2006-01-02", data.Date)
-
 	return domain.Rate{
 		Base:   base,
 		Target: target,
 		Value:  rateValue,
-		Date:   actualDate,
+		Date:   data.Date,
 	}, nil
 }

@@ -3,6 +3,7 @@ package usecase
 import (
 	"fmt"
 	"time"
+	"yenup/internal/domain/notifier"
 	"yenup/internal/domain/rate"
 )
 
@@ -21,10 +22,10 @@ type CheckRateResult struct {
 // RateChecker is the usecase for checking the rate
 type RateChecker struct {
 	Fetcher  rate.RateFetcher
-	Notifier rate.Notifier
+	Notifier notifier.Notifier
 }
 
-func NewRateChecker(repo rate.RateFetcher, notifier rate.Notifier) *RateChecker {
+func NewRateChecker(repo rate.RateFetcher, notifier notifier.Notifier) *RateChecker {
 	return &RateChecker{
 		Fetcher:  repo,
 		Notifier: notifier,
@@ -34,13 +35,15 @@ func NewRateChecker(repo rate.RateFetcher, notifier rate.Notifier) *RateChecker 
 func (r *RateChecker) CheckRates(base, target string, forceNotify bool) (*CheckRateResult, error) {
 	today := time.Now()
 	yesterday := today.AddDate(0, 0, -1)
+	todayStr := today.Format("2006-01-02")
+	yesterdayStr := yesterday.Format("2006-01-02")
 
 	// Get rates from repository
-	todayRate, err := r.Fetcher.FetchRate(today, base, target)
+	todayRate, err := r.Fetcher.FetchRate(todayStr, base, target)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch today's rate: %w", err)
 	}
-	yesterdayRate, err := r.Fetcher.FetchRate(yesterday, base, target)
+	yesterdayRate, err := r.Fetcher.FetchRate(yesterdayStr, base, target)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch yesterday's rate: %w", err)
 	}

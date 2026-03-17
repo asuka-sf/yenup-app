@@ -1,12 +1,8 @@
 package rate
 
-import (
-	"time"
-)
-
 type Rate struct {
-	Base   string
-	Target string
-	Value  float64
-	Date   time.Time
+	Date   string  `json:"date"`
+	Base   string  `json:"base"`
+	Target string  `json:"target"`
+	Value  float64 `json:"value"`
 }

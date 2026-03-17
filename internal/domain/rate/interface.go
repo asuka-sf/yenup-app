@@ -1,13 +1,6 @@
 package rate
 
-import "time"
-
 type RateFetcher interface {
 	// Get the rate for a given base and target currency
-	FetchRate(date time.Time, base string, target string) (Rate, error)
-}
-
-type Notifier interface {
-	// Notify the user via　lack
-	Notify(message string) error
+	FetchRate(date, base, target string) (Rate, error)
 }
