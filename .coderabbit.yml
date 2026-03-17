@@ -4,13 +4,15 @@ reviews:
   profile: "assertive"
   request_changes_workflow: false
   high_level_summary: true
-  instructions: |
-    - Verify that the code follows Clean Architecture principles:
-      layers (handler, usecase, domain, infrastructure) are respected
-      and dependencies flow inward only.
-    - Check that interfaces are used appropriately at layer boundaries.
-    - Ensure error handling is thorough and errors are wrapped with context using fmt.Errorf with the %w verb (e.g., fmt.Errorf("failed to ...: %w", err)).
-    - Review for Go coding conventions (naming, receiver types, defer usage).
+  path_instructions:
+    - path: "**/*.go"
+      instructions: |
+        - Verify that the code follows Clean Architecture principles:
+          layers (handler, usecase, domain, infrastructure) are respected
+          and dependencies flow inward only.
+        - Check that interfaces are used appropriately at layer boundaries.
+        - Ensure error handling is thorough and errors are wrapped with context using fmt.Errorf with the %w verb (e.g., fmt.Errorf("failed to ...: %w", err)).
+        - Review for Go coding conventions (naming, receiver types, defer usage).
   poem: true
   review_status: true
   review_details: true
