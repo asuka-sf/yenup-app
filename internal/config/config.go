@@ -15,6 +15,8 @@ type Config struct {
 	ExchangeRateAPIURL string
 	FrankfurterAPIURL  string
 	SlackWebhookURL    string
+	GCSBucketName      string
+	GCSObjectName      string
 }
 
 func Load() (*Config, error) {
@@ -31,6 +33,8 @@ func Load() (*Config, error) {
 		ExchangeRateAPIURL: getEnv("EXCHANGE_RATE_API_URL", ""),
 		FrankfurterAPIURL:  getEnv("FRANKFURTER_API_URL", "https://api.frankfurter.app/"),
 		SlackWebhookURL:    getEnv("SLACK_WEBHOOK_URL", ""),
+		GCSBucketName:      getEnv("GCS_BUCKET_NAME", ""),
+		GCSObjectName:      getEnv("GCS_OBJECT_NAME", ""),
 	}
 	return cfg, nil
 }
