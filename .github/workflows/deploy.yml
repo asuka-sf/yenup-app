@@ -58,4 +58,6 @@ jobs:
             BASE_CURRENCY=CAD
             TARGET_CURRENCY=JPY
             SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }}
+            GCS_BUCKET_NAME=${{ secrets.GCS_BUCKET_NAME }}
+            GCS_OBJECT_NAME=${{ secrets.GCS_OBJECT_NAME }}
 
