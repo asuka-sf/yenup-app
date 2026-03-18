@@ -1,6 +1,7 @@
 package registry
 
 import (
+	"context"
 	"yenup/internal/config"
 	domainRate "yenup/internal/domain/rate"
 	"yenup/internal/handler"
@@ -19,7 +20,7 @@ type Registry struct {
 	AppHandler *handler.Handler
 }
 
-func NewRegistry(cfg *config.Config, gcsClient *storage.Client) (*Registry, error) {
+func NewRegistry(ctx context.Context, cfg *config.Config, gcsClient *storage.Client) (*Registry, error) {
 
 	// storageClient provides read/write access to rate data stored in GCS.
 	storageClient := storageRepo.NewGCSClient(gcsClient, cfg.GCSBucketName, cfg.GCSObjectName)
@@ -35,7 +36,7 @@ func NewRegistry(cfg *config.Config, gcsClient *storage.Client) (*Registry, erro
 	slackNotifier := notifierRepo.NewSlackNotifier(cfg.SlackWebhookURL)
 
 	// usecase
-	rateUsecase := usecase.NewRateChecker(rateFetcher, slackNotifier)
+	rateUsecase := usecase.NewRateChecker(storageClient, rateFetcher, slackNotifier)
 	reportUsecase := usecase.NewWeeklyReporter(storageClient, slackNotifier)
 
 	// handler

@@ -18,9 +18,9 @@ type WeeklyReporter struct {
 }
 
 // NewWeeklyReporter creates a new WeeklyReporter with the given storage client and notifier.
-func NewWeeklyReporter(repo storage.Client, notifier notifier.Notifier) *WeeklyReporter {
+func NewWeeklyReporter(storageClient storage.Client, notifier notifier.Notifier) *WeeklyReporter {
 	return &WeeklyReporter{
-		StorageClient: repo,
+		StorageClient: storageClient,
 		Notifier:      notifier,
 	}
 }
