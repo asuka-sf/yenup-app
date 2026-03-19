@@ -40,6 +40,7 @@ type RateData struct {
 
 // CheckRate checks the rate of the base and target currencies
 func (h *RateHandler) CheckRate(c *gin.Context) {
+	ctx := c.Request.Context()
 	base := c.Query("base")
 	target := c.Query("target")
 	// If notification=true, force sending a Slack message for testing/verification.
@@ -69,7 +70,7 @@ func (h *RateHandler) CheckRate(c *gin.Context) {
 	}
 
 	// use usecase to check the rate
-	result, err := h.Usecase.CheckRates(base, target, forceNotify)
+	result, err := h.Usecase.CheckRates(ctx, base, target, forceNotify)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, Response{
 			Status:  "error",

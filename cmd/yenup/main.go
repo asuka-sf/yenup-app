@@ -29,7 +29,7 @@ func main() {
 	defer gcsClient.Close()
 
 	// create registry from registry.go
-	reg, err := registry.NewRegistry(cfg, gcsClient)
+	reg, err := registry.NewRegistry(ctx, cfg, gcsClient)
 	if err != nil {
 		log.Fatal(err)
 	}
