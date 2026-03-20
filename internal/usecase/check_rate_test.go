@@ -12,16 +12,17 @@ import (
 
 func TestCheckRates(t *testing.T) {
 	tests := []struct {
-		name          string
-		mockRates     []*rate.Rate
-		mockFetcher   []rate.Rate
-		expected      *CheckRateResult
-		mockFetchErr  error
-		mockReadErr   error
-		mockWriteErr  error
-		mockNotifyErr error
-		forceNotify   bool
-		wantErr       bool
+		name             string
+		mockRates        []*rate.Rate
+		mockFetcher      []rate.Rate
+		expected         *CheckRateResult
+		wantWrittenRates []*rate.Rate
+		mockFetchErr     error
+		mockReadErr      error
+		mockWriteErr     error
+		mockNotifyErr    error
+		forceNotify      bool
+		wantErr          bool
 	}{
 		{
 			name:        "success: JPY is stronger",
@@ -53,6 +54,19 @@ func TestCheckRates(t *testing.T) {
 			mockRates:   testValidRates,
 			mockFetcher: []rate.Rate{todayRate, yesterdayRate},
 			expected:    &CheckRateResult{TodayRate: todayRate.Value, YesterdayRate: yesterdayRate.Value, IsNotified: true},
+		},
+		{
+			name: "success: replace existing entry for the same date",
+			mockRates: []*rate.Rate{
+				{Date: "2026-03-18", Base: "CAD", Target: "JPY", Value: 111.00},
+				{Date: "2026-03-19", Base: "CAD", Target: "JPY", Value: 999.99},
+			},
+			mockFetcher: []rate.Rate{todayRate, yesterdayRate},
+			expected:    &CheckRateResult{TodayRate: todayRate.Value, YesterdayRate: yesterdayRate.Value, IsNotified: true},
+			wantWrittenRates: []*rate.Rate{
+				{Date: "2026-03-18", Base: "CAD", Target: "JPY", Value: 111.00},
+				{Date: "2026-03-19", Base: "CAD", Target: "JPY", Value: 110.22},
+			},
 		},
 		{
 			name:         "error: fail to fetch rate",
@@ -106,7 +120,9 @@ func TestCheckRates(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 
-				if len(tt.mockRates) >= 7 {
+				if tt.wantWrittenRates != nil {
+					assert.Equal(t, tt.wantWrittenRates, storage.writtenRates)
+				} else if len(tt.mockRates) >= 7 {
 					assert.Len(t, storage.writtenRates, 7)
 				} else {
 					assert.Len(t, storage.writtenRates, len(tt.mockRates)+1)
