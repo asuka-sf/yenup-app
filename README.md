@@ -97,7 +97,7 @@ graph LR
     # Google Cloud Storage
    GCS_BUCKET_NAME=YOUR_BUCKET_NAME
    GCS_OBJECT_NAME=YOUR_OBJECT_NAME
-   
+
    # Slack
    # Example (do not commit real values). Set this in your local `.env` or Cloud Run env vars:
    # SLACK_WEBHOOK_URL
@@ -114,16 +114,19 @@ go run cmd/yenup/main.go
 ### Usage
 
 Trigger a rate check via HTTP request:
+
 ```bash
 curl "http://localhost:8080/check-rate?base=CAD&target=JPY"
 ```
 
 Force a Slack notification (for testing):
+
 ```bash
 curl "http://localhost:8080/check-rate?base=CAD&target=JPY&notification=true"
 ```
 
 Generate a weekly report:
+
 ```bash
 curl "http://localhost:8080/weekly-report"
 ```
