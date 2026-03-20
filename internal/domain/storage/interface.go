@@ -2,12 +2,12 @@ package storage
 
 import (
 	"context"
-	rate "yenup/internal/domain/rate"
+	"yenup/internal/domain/rate"
 )
 
 type Client interface {
-	// Read a JSON file
+	// Read a rate data from storage
 	Read(ctx context.Context) ([]*rate.Rate, error)
-	// Write a JSON file
-	// Write(path string, rates rate.Rate) error
+	// Write a rate data to storage
+	Write(ctx context.Context, rates []*rate.Rate) error
 }

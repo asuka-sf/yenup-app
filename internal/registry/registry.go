@@ -35,7 +35,7 @@ func NewRegistry(cfg *config.Config, gcsClient *storage.Client) (*Registry, erro
 	slackNotifier := notifierRepo.NewSlackNotifier(cfg.SlackWebhookURL)
 
 	// usecase
-	rateUsecase := usecase.NewRateChecker(rateFetcher, slackNotifier)
+	rateUsecase := usecase.NewRateChecker(storageClient, rateFetcher, slackNotifier)
 	reportUsecase := usecase.NewWeeklyReporter(storageClient, slackNotifier)
 
 	// handler
