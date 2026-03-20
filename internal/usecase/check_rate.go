@@ -56,7 +56,7 @@ func (r *RateChecker) CheckRates(ctx context.Context, base, target string, force
 	// read the JSON file to get rates information
 	rates, err := r.StorageClient.Read(ctx)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to read rate history: %w", err)
 	}
 
 	// update the JSON file
@@ -100,17 +100,27 @@ func (r *RateChecker) CheckRates(ctx context.Context, base, target string, force
 	return result, nil
 }
 
-func (r *RateChecker) saveRates(ctx context.Context, rate *rate.Rate, rates []*rate.Rate) error {
+func (r *RateChecker) saveRates(ctx context.Context, newRate *rate.Rate, rates []*rate.Rate) error {
+	// if the same date already exists, replace it instead of appending
+	replaced := false
+	for i, r := range rates {
+		if r.Date == newRate.Date {
+			rates[i] = newRate
+			replaced = true
+			break
+		}
+	}
+	if !replaced {
+		rates = append(rates, newRate)
+	}
 
 	// if the json file has more than 7 days' rates, remove the early days' ones
 	if len(rates) >= 7 {
-		n := len(rates) - 6
-		rates = rates[n:]
+		rates = rates[len(rates)-7:]
 	}
-	rates = append(rates, rate)
 
 	if err := r.StorageClient.Write(ctx, rates); err != nil {
-		return fmt.Errorf("failed to write json: %w", err)
+		return fmt.Errorf("failed to save rates: %w", err)
 	}
 	return nil
 }

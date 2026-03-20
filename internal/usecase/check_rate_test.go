@@ -55,10 +55,9 @@ func TestCheckRates(t *testing.T) {
 			expected:    &CheckRateResult{TodayRate: todayRate.Value, YesterdayRate: yesterdayRate.Value, IsNotified: true},
 		},
 		{
-			name:         "error: fail to get Today's rate",
+			name:         "error: fail to fetch rate",
 			mockRates:    []*rate.Rate{},
-			mockFetcher:  []rate.Rate{rate.Rate{}, yesterdayRate},
-			mockFetchErr: errors.New("failed to get Today's rate"),
+			mockFetchErr: errors.New("failed to fetch rate"),
 			wantErr:      true,
 		},
 		{
@@ -102,14 +101,17 @@ func TestCheckRates(t *testing.T) {
 			result, err := uc.CheckRates(ctx, "CAD", "JPY", tt.forceNotify)
 
 			if tt.wantErr {
+				// if an error expected
 				assert.Error(t, err)
 			} else {
+				assert.NoError(t, err)
+
 				if len(tt.mockRates) >= 7 {
 					assert.Len(t, storage.writtenRates, 7)
 				} else {
 					assert.Len(t, storage.writtenRates, len(tt.mockRates)+1)
 				}
-				assert.NoError(t, err)
+
 				assert.Equal(t, tt.expected, result)
 			}
 		})

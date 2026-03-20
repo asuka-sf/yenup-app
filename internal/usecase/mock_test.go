@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 
 	"yenup/internal/domain/rate"
 )
@@ -74,10 +75,15 @@ type MockFetcher struct {
 }
 
 func (m *MockFetcher) FetchRate(date, base, target string) (rate.Rate, error) {
+	// return error if configured
 	if m.err != nil {
 		return rate.Rate{}, m.err
 	}
+	// guard against out-of-bounds access caused by misconfigured test data
+	if m.idx >= len(m.rates) {
+		return rate.Rate{}, fmt.Errorf("mock fetcher: no rate configured for call %d", m.idx+1)
+	}
 	r := m.rates[m.idx]
 	m.idx++
-	return r, m.err
+	return r, nil
 }

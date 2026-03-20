@@ -1,7 +1,6 @@
 package registry
 
 import (
-	"context"
 	"yenup/internal/config"
 	domainRate "yenup/internal/domain/rate"
 	"yenup/internal/handler"
@@ -20,7 +19,7 @@ type Registry struct {
 	AppHandler *handler.Handler
 }
 
-func NewRegistry(ctx context.Context, cfg *config.Config, gcsClient *storage.Client) (*Registry, error) {
+func NewRegistry(cfg *config.Config, gcsClient *storage.Client) (*Registry, error) {
 
 	// storageClient provides read/write access to rate data stored in GCS.
 	storageClient := storageRepo.NewGCSClient(gcsClient, cfg.GCSBucketName, cfg.GCSObjectName)
