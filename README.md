@@ -8,6 +8,8 @@ This project demonstrates the implementation of **Clean Architecture** and **Dep
 
 - **Rate Monitoring**: Fetches daily exchange rates using external APIs.
 - **Trend Alert**: Sends a Slack notification automatically when JPY strengthens (i.e., the base currency/JPY rate drops).
+- **Rate History**: Persists up to 7 days of rate data in Google Cloud Storage (JSON).
+- **Weekly Report**: Generates a weekly summary of rate trends and sends it via Slack.
 - **Smart Calculation**: Implements cross-rate calculation (via EUR) to support free-tier limitations of exchange rate APIs.
 - **REST API**: Provides a RESTful endpoint to trigger checks manually and retrieve detailed rate data.
 - **Cloud Native**: Deployed on Google Cloud Run with automated daily checks via Cloud Scheduler.
@@ -20,6 +22,7 @@ This project demonstrates the implementation of **Clean Architecture** and **Dep
 - **Dependency Injection**: Registry pattern
 - **External API**: exchangeratesapi.io / Frankfurter
 - **Notification**: Slack Incoming Webhook
+- **Storage**: Google Cloud Storage (rate history)
 - **Infrastructure**: Google Cloud Run, Artifact Registry, Cloud Scheduler
 - **CI/CD**: GitHub Actions
 
@@ -33,10 +36,10 @@ cmd/
 internal/
   ├── config/       # Configuration management
   ├── domain/       # Domain models and repository interfaces
-  ├── usecase/      # Business logic (rate comparison)
+  ├── usecase/      # Business logic (rate comparison, weekly report)
   ├── handler/      # HTTP handlers (Gin)
   ├── infrastructure/
-  │   └── repository/ # External API & Slack implementation
+  │   └── repository/ # External API, Slack & GCS implementation
   └── registry/     # Dependency Injection container
 ```
 
@@ -63,6 +66,7 @@ graph LR
 
 - Go 1.24 or higher
 - Slack Webhook URL (for notifications)
+- Google Cloud Storage bucket (for rate history)
 
 ### Installation
 
@@ -90,10 +94,15 @@ graph LR
    API_PROVIDER=frankfurter
    FRANKFURTER_API_URL=https://api.frankfurter.app/
 
+   # Google Cloud Storage
+   GCS_BUCKET_NAME=YOUR_BUCKET_NAME
+   GCS_OBJECT_NAME=YOUR_OBJECT_NAME
+
    # Slack
    # Example (do not commit real values). Set this in your local `.env` or Cloud Run env vars:
-   # SLACK_WEBHOOK_URL=YOUR_SLACK_WEBHOOK_URL
-   SLACK_WEBHOOK_URL=
+   # SLACK_WEBHOOK_URL
+   SLACK_WEBHOOK_URL=YOUR_SLACK_WEBHOOK_URL
+
    ```
 
 ### Running the Application
@@ -108,6 +117,18 @@ Trigger a rate check via HTTP request:
 
 ```bash
 curl "http://localhost:8080/check-rate?base=CAD&target=JPY"
+```
+
+Force a Slack notification (for testing):
+
+```bash
+curl "http://localhost:8080/check-rate?base=CAD&target=JPY&notification=true"
+```
+
+Generate a weekly report:
+
+```bash
+curl "http://localhost:8080/weekly-report"
 ```
 
 Response example:
@@ -125,6 +146,10 @@ Response example:
   }
 }
 ```
+
+## 🔍 Code Review
+
+This project uses [CodeRabbit](https://coderabbit.ai/) for automated AI code reviews on every pull request, focusing on Clean Architecture principles, error handling, and Go coding conventions.
 
 ## 🤝 Contributing
 
