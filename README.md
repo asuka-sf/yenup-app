@@ -149,8 +149,7 @@ Response example:
 
 ## 🔍 Code Review
 
-This project uses [CodeRabbit](https://coderabbit.ai/) for automated AI code reviews on every pull request, 
-focusing on Clean Architecture principles, error handling, and Go coding conventions.
+This project uses [CodeRabbit](https://coderabbit.ai/) for automated AI code reviews on every pull request, focusing on Clean Architecture principles, error handling, and Go coding conventions.
 
 ## 🤝 Contributing
 
