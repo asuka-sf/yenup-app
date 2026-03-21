@@ -94,7 +94,7 @@ graph LR
    API_PROVIDER=frankfurter
    FRANKFURTER_API_URL=https://api.frankfurter.app/
 
-    # Google Cloud Storage
+   # Google Cloud Storage
    GCS_BUCKET_NAME=YOUR_BUCKET_NAME
    GCS_OBJECT_NAME=YOUR_OBJECT_NAME
 
@@ -146,6 +146,11 @@ Response example:
   }
 }
 ```
+
+## 🔍 Code Review
+
+This project uses [CodeRabbit](https://coderabbit.ai/) for automated AI code reviews on every pull request, 
+focusing on Clean Architecture principles, error handling, and Go coding conventions.
 
 ## 🤝 Contributing
 
