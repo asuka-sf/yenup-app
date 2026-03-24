@@ -6,10 +6,6 @@ import (
 	"net/http"
 )
 
-type Notifier interface {
-	Notify(message string) error
-}
-
 type SlackNotifier struct {
 	WebhookURL string
 }
