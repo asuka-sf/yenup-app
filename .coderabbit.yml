@@ -3,7 +3,6 @@ early_access: false
 reviews:
   profile: "assertive"
   request_changes_workflow: true
-  auto_approve: true
   high_level_summary: true
   path_instructions:
     - path: "**/*.go"
