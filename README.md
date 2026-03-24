@@ -43,6 +43,81 @@ internal/
   └── registry/     # Dependency Injection container
 ```
 
+## 📊 Domain Model Diagram
+### Layered Architecture
+
+```mermaid
+flowchart TB
+    subgraph Handler
+        CH["CheckRateHandler"]
+        WH["WeeklyReportHandler"]
+    end
+
+    subgraph Usecase
+        RU["RateCheckUsecase"]
+        WU["WeeklyReportUsecase"]
+    end
+
+    subgraph Domain
+        RF["rate.RateFetcher"]
+        RN["notifier.Notifier"]
+        SC["storage.Client"]
+    end
+
+    subgraph Infrastructure
+        FF["FrankfurterFetcher"]
+        EF["ExchangeRatesFetcher"]
+        SN["SlackNotifier"]
+        GCS["GCSClient"]
+    end
+
+    CH --> RU
+    WH --> WU
+
+    RU --> RF
+    RU --> RN
+    RU --> SC
+    WU --> RN
+    WU --> SC
+
+    RF -.->|implemented by| FF
+    RF -.->|implemented by| EF
+    RN -.->|implemented by| SN
+    SC -.->|implemented by| GCS
+```
+> `FrankfurterFetcher` and `ExchangeRatesFetcher` are interchangeable implementations of `rate.RateFetcher`. 
+> The active implementation can be switched via the `API_PROVIDER` environment variable.
+
+### Process flow
+
+```mermaid
+flowchart TD
+    subgraph GCP["Google Cloud"]
+        CS["Cloud Scheduler"]
+        CR["Cloud Run"]
+        GCS["GCS"]
+    end
+
+    subgraph YenUp
+        CHK["check-rate"]
+        WR["weekly-report"]
+    end
+
+    EXT["Frankfurter API"]
+    Slack["Slack"]
+
+    CS --> CR
+    CR -->|"/check-rate"| CHK
+    CR -->|"/weekly-report"| WR
+
+    CHK --> EXT
+    CHK -->|write| GCS
+    CHK --> Slack
+
+    WR -->|read| GCS
+    WR --> Slack
+```
+
 ## 🚀 Deployment & CI/CD
 
 The application is deployed to **Google Cloud Run** using a continuous delivery pipeline.
