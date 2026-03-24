@@ -44,6 +44,7 @@ internal/
 ```
 
 ## 📊 Domain Model Diagram
+
 ### Layered Architecture
 
 ```mermaid
@@ -85,6 +86,7 @@ flowchart TB
     RN -.->|implemented by| SN
     SC -.->|implemented by| GCS
 ```
+
 > `FrankfurterFetcher` and `ExchangeRatesFetcher` are interchangeable implementations of `rate.RateFetcher`. 
 > The active implementation can be switched via the `API_PROVIDER` environment variable.
 
