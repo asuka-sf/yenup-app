@@ -2,7 +2,7 @@ language: "en-US"
 early_access: false
 reviews:
   profile: "assertive"
-  request_changes_workflow: false
+  request_changes_workflow: true
   high_level_summary: true
   path_instructions:
     - path: "**/*.go"
@@ -19,12 +19,6 @@ reviews:
   auto_review:
     enabled: true
     drafts: false
-
-tools:
-  gitleaks:
-    enabled: true
-  golangci-lint:
-    enabled: true
 
 chat:
   auto_reply: true
